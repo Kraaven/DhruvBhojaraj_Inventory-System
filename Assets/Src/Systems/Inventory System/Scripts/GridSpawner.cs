@@ -3,14 +3,14 @@ using UnityEngine;
 public class GridSpawner : MonoBehaviour
 {
     [Header("Object to Spawn")]
-    public GameObject prefab;
+    public InventorySlot prefab;
 
     [Header("Grid Settings")]
     public Vector2Int xRange = new Vector2Int(-2, 2);
     public Vector2Int yRange = new Vector2Int(-3, 3);
     public int spacing = 2;
     
-    void Start()
+    public void Init()
     {
         if (prefab == null)
         {
@@ -23,13 +23,16 @@ public class GridSpawner : MonoBehaviour
 
     void SpawnGrid()
     {
-        for (int y = yRange.x; y <= yRange.y; y += spacing)
+        var SlotID = 0;
+        for (int y = yRange.y; y >= yRange.x; y -= spacing)
         {
             for (int x = xRange.x; x <= xRange.y; x += spacing)
             {
                 Vector3 localPosition = new Vector3(x, y, 0);
-                GameObject obj = Instantiate(prefab, transform);
+                InventorySlot obj = Instantiate(prefab, transform);
                 obj.transform.localPosition = localPosition;
+                obj.InventorySlotID = SlotID;
+                SlotID++;
             }
         }
     }
