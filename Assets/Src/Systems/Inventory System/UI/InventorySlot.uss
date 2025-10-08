@@ -1,0 +1,36 @@
+:root {
+}
+
+.inventory-slot__root {
+    flex-grow: 1;
+}
+
+.inventory-slot__ring {
+    flex-grow: 1;
+    background-image: url("project://database/Assets/Src/Systems/Inventory%20System/UI/Images/circle-svgrepo-com.svg?fileID=7388822144124034973&guid=9190ab6b0ef33f342a42ee2caec5ebd0&type=3#circle-svgrepo-com");
+    background-size: 50% 50%;
+    -unity-background-image-tint-color: rgb(252, 252, 252);
+    transition-property: scale, -unity-background-image-tint-color;
+    transition-duration: 0.4s;
+}
+
+.inventory-slot__root.hover .inventory-slot__ring {
+    scale: 1.4 1.4;
+    transition-property: scale, -unity-background-image-tint-color;
+    transition-duration: 0.4s, 0.4s;
+    -unity-background-image-tint-color: rgb(255, 157, 85);
+}
+
+.inventory-slot__root.active .inventory-slot__ring {
+    scale: 2 2;
+    transition-property: scale, -unity-background-image-tint-color;
+    transition-duration: 0.4s, 0.4s;
+    -unity-background-image-tint-color: rgb(85, 186, 255);
+}
+
+.inventory-slot__root.active.hover .inventory-slot__ring {
+    scale: 2 2;
+    transition-property: scale, -unity-background-image-tint-color;
+    transition-duration: 0.4s, 0.4s;
+    -unity-background-image-tint-color: rgb(255, 157, 85);
+}
