@@ -1,6 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="InventorySlotTemplate" src="project://database/Assets/Src/Systems/Inventory%20System/UI/InventorySlotTemplate.uxml?fileID=9197481963319205126&amp;guid=4cbf663cfc9be054dbca8c1903c09187&amp;type=3#InventorySlotTemplate" />
-    <Style src="project://database/Assets/Src/Systems/Inventory%20System/UI/inventoryUI.uss?fileID=7433441132597879392&amp;guid=b1e33000fd7cdc142950bf977904a98b&amp;type=3#inventoryUI" />
+    <Style src="project://database/Assets/Src/Systems/Inventory%20System/UI/inventoryUI.uss?fileID=7433441132597879392&amp;guid=b1e33000fd7cdc142950bf977904a98b&amp;type=3" />
     <ui:VisualElement name="inventory-root" class="inventory__root">
         <ui:VisualElement name="row" class="inventory__slot-row" style="flex-direction: row;">
             <ui:Instance template="InventorySlotTemplate" class="inventory__slot-instance" />

@@ -41,7 +41,7 @@ public class InventorySlot : MonoBehaviour
         print($"OnTriggerExit: {other.name}");
         if (other.CompareTag("Hand"))
         {
-            InventoryUIBridge.instance.UnActiveSlot(InventorySlotID);
+            InventoryUIBridge.instance.UnHoverSlot(InventorySlotID);
             isHandHovering = false;
         }
 
