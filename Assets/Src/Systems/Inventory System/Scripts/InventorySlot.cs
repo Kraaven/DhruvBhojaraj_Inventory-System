@@ -8,9 +8,9 @@ public class InventorySlot : MonoBehaviour
 {
     public BoxCollider slotCollider;
     public bool isOccupied = false;
-    private Stack<InventoryItem> slotItems = new Stack<InventoryItem>();
+    public Stack<InventoryItem> slotItems = new Stack<InventoryItem>();
     public int InventorySlotID;
-    
+    public int ItemCount;
     private static HashSet<InventoryItem> itemsBeingPlaced = new HashSet<InventoryItem>();
 
     private void Start()
@@ -63,38 +63,7 @@ public class InventorySlot : MonoBehaviour
             return;
         }
         
-        inventoryItem.grabInteractableReference.selectExited.RemoveListener(OnItemReleased);
         
-        print($"{other.name} Exited from Slot {InventorySlotID}");
-        
-        if (slotItems.Count > 0 && slotItems.Peek() == inventoryItem)
-        {
-            inventoryItem.rigidbodyReference.isKinematic = false;
-            slotItems.Pop();
-            InventoryUIBridge.instance.SetHoverState(InventorySlotID, false);
-            inventoryItem.ASSINGNED_SLOT = null;
-            
-            // print($"Removed {other.name} from Slot {InventorySlotID}, movement granted");
-            
-            if (slotItems.Count > 0)
-            {
-                var nextItem = slotItems.Peek();
-                nextItem.gameObject.SetActive(true);
-                isOccupied = true;
-                // print($"{other.name} Exited from Slot {InventorySlotID}, Slot actively hosting {nextItem.name}");
-            }
-            else
-            {
-                isOccupied = false;
-                InventoryUIBridge.instance.SetActiveState(InventorySlotID, false);
-                // print($"{other.name} Exited from Slot {InventorySlotID}, Slot Empty");
-                
-            }
-            
-            InventoryUIBridge.instance.SetAmountState(InventorySlotID, slotItems.Count);
-        }
-        
-        InventoryUIBridge.instance.SetHoverState(InventorySlotID, false);
     }
 
     private void OnItemReleased(SelectExitEventArgs args)
@@ -130,6 +99,8 @@ public class InventorySlot : MonoBehaviour
         
         InventoryUIBridge.instance.SetActiveState(InventorySlotID, true);
         InventoryUIBridge.instance.SetHoverState(InventorySlotID, false);
+
+        ItemCount = slotItems.Count;
         
         if(slotItems.Peek().itemType == InventoryItem.ItemType.Accumulative) 
             InventoryUIBridge.instance.SetAmountState(InventorySlotID, slotItems.Count);
@@ -144,6 +115,43 @@ public class InventorySlot : MonoBehaviour
             });
         
         // print($"Pushed {item.name} into Slot {InventorySlotID}");
+    }
+
+    public void RemoveItemFromSlot(InventoryItem item)
+    {
+        item.grabInteractableReference.selectExited.RemoveListener(OnItemReleased);
+        
+        print($"{item.name} Exited from Slot {InventorySlotID}");
+        
+        if (slotItems.TryPeek(out InventoryItem itemBeingRemoved) && itemBeingRemoved == item)
+        {
+            item.rigidbodyReference.isKinematic = false;
+            slotItems.Pop();
+            InventoryUIBridge.instance.SetHoverState(InventorySlotID, false);
+            item.ASSINGNED_SLOT = null;
+            ItemCount = slotItems.Count;
+            
+            // print($"Removed {other.name} from Slot {InventorySlotID}, movement granted");
+            
+            if (slotItems.Count > 0)
+            {
+                var nextItem = slotItems.Peek();
+                nextItem.gameObject.SetActive(true);
+                isOccupied = true;
+                // print($"{other.name} Exited from Slot {InventorySlotID}, Slot actively hosting {nextItem.name}");
+            }
+            else
+            {
+                isOccupied = false;
+                InventoryUIBridge.instance.SetActiveState(InventorySlotID, false);
+                slotItems.Clear();
+                // print($"{other.name} Exited from Slot {InventorySlotID}, Slot Empty");
+            }
+            
+            InventoryUIBridge.instance.SetAmountState(InventorySlotID, slotItems.Count);
+        }
+        
+        InventoryUIBridge.instance.SetHoverState(InventorySlotID, false);
     }
 
     public void Pack()

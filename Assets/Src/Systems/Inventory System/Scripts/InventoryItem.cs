@@ -58,8 +58,14 @@ public class InventoryItem : MonoBehaviour
         };
     }
 
-    public void ResetScale()
+    public void ResetScale(bool immediate = false)
     {
+        if (immediate)
+        {
+            transform.localScale = originalScale;
+            return;
+        }
+
         currentTween?.Kill();
         currentTween = transform.DOScale(originalScale, tweenDuration).SetEase(Ease.OutBack);
         currentTween.onComplete += () =>
