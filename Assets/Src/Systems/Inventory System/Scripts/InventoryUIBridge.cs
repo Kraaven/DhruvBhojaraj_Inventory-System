@@ -21,24 +21,26 @@ public class InventoryUIBridge : MonoBehaviour
         UISlots = root.Query<VisualElement>(className: "inventory-slot__root").ToList();
     }
 
-    public void HoverSlot(int slotID)
+    public void SetHoverState(int slotID, bool state)
     {
-        UISlots[slotID].AddToClassList("hover");
-    }
-    
-    public void UnHoverSlot(int slotID)
-    {
-        UISlots[slotID].RemoveFromClassList("hover");
+        if(state) UISlots[slotID].AddToClassList("hover");
+        else UISlots[slotID].RemoveFromClassList("hover");
     }
 
-    public void ActiveSlot(int slotID)
+    public void SetActiveState(int slotID, bool state)
     {
-        UISlots[slotID].AddToClassList("active");
+        if(state) UISlots[slotID].AddToClassList("active");
+        else UISlots[slotID].RemoveFromClassList("active");
     }
 
-    public void UnActiveSlot(int slotID)
+    public void SetAmountState(int slotID, int amount)
     {
-        UISlots[slotID].RemoveFromClassList("active");
+        if(amount == 0) UISlots[slotID].RemoveFromClassList("stackable");
+        else
+        {
+            UISlots[slotID].AddToClassList("stackable");
+            UISlots[slotID].Q<Label>(className:"inventory-slot__item-amount-value").text = $"x{amount}";
+        }
     }
 
 }

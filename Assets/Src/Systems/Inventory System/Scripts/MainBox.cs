@@ -5,43 +5,31 @@ using DG.Tweening;
 [RequireComponent(typeof(Collider))]
 public class InventoryMainBox : MonoBehaviour
 {
-    private InventorySlot inventorySlot;
+    private InventorySlot inventorySlotSample;
 
     public void Awake()
     {
         this.GetComponentInChildren<GridSpawner>().Init();
+        inventorySlotSample = GetComponentInChildren<InventorySlot>();
         
-        print("Grid Spawned");
-        inventorySlot = GetComponentInChildren<InventorySlot>();
-        print("Slot Assigned");
+        print("Inventory Slots Created");
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        BaseGrabInteractable item = other.gameObject.GetComponentInChildren<BaseGrabInteractable>();
+        if(!other.TryGetComponent(out InventoryItem inventoryItem)) return;
 
-        if (item == null || inventorySlot == null)
-            return;
-        
-        BoxCollider slotRenderer = inventorySlot.GetComponent<BoxCollider>();
-
-        if (item == null || slotRenderer == null) return;
-
-        Bounds itemBounds = item.GetCombinedRendererBounds();
-        Bounds slotBounds = slotRenderer.bounds;
+        Bounds itemBounds = inventoryItem.objectBounds;
+        Bounds slotBounds = inventorySlotSample.slotCollider.bounds;
         
         float scaleFactor = GetFitScaleFactor(itemBounds.size, slotBounds.size);
-        
-        Vector3 targetScale = item.originalScale * scaleFactor;
-        item.Shrink(targetScale);
+        inventoryItem.Shrink(scaleFactor);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        BaseGrabInteractable item = other.GetComponent<BaseGrabInteractable>();
-        if (item == null) return;
-        
-        item.ResetScale();
+        if(!other.TryGetComponent(out InventoryItem inventoryItem)) return;
+        inventoryItem.ResetScale();
     }
     private float GetFitScaleFactor(Vector3 itemSize, Vector3 slotSize)
     {
@@ -49,8 +37,7 @@ public class InventoryMainBox : MonoBehaviour
         float yRatio = slotSize.y / itemSize.y;
         float zRatio = slotSize.z / itemSize.z;
         
-        float scaleFactor = Mathf.Min(xRatio, yRatio, zRatio) * 0.9f;
-        // return Mathf.Clamp(scaleFactor, 0.05f, 10f);
+        float scaleFactor = Mathf.Min(xRatio, yRatio, zRatio) * 1;
         return scaleFactor;
     }
 }
