@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -27,7 +28,7 @@ public class InventorySlot : MonoBehaviour
             else
             {
                 var topItem = slotItems.Peek();
-                print($"Entered Item : {inventoryItem.name}, {inventoryItem.itemID}\nExisting Item : {topItem.name}, {topItem.itemID}");
+                // print($"Entered Item : {inventoryItem.name}, {inventoryItem.itemID}\nExisting Item : {topItem.name}, {topItem.itemID}");
                 if (topItem.itemType == InventoryItem.ItemType.Accumulative && topItem.itemID == inventoryItem.itemID)
                     canBeInserted = true;
             }
@@ -58,7 +59,7 @@ public class InventorySlot : MonoBehaviour
         
         if (itemsBeingPlaced.Contains(inventoryItem))
         {
-            print($"{other.name} Exited from Slot {InventorySlotID} (ignored - being placed)");
+            // print($"{other.name} Exited from Slot {InventorySlotID} (ignored - being placed)");
             return;
         }
         
@@ -73,20 +74,20 @@ public class InventorySlot : MonoBehaviour
             InventoryUIBridge.instance.SetHoverState(InventorySlotID, false);
             inventoryItem.ASSINGNED_SLOT = null;
             
-            print($"Removed {other.name} from Slot {InventorySlotID}, movement granted");
+            // print($"Removed {other.name} from Slot {InventorySlotID}, movement granted");
             
             if (slotItems.Count > 0)
             {
                 var nextItem = slotItems.Peek();
                 nextItem.gameObject.SetActive(true);
                 isOccupied = true;
-                print($"{other.name} Exited from Slot {InventorySlotID}, Slot actively hosting {nextItem.name}");
+                // print($"{other.name} Exited from Slot {InventorySlotID}, Slot actively hosting {nextItem.name}");
             }
             else
             {
                 isOccupied = false;
                 InventoryUIBridge.instance.SetActiveState(InventorySlotID, false);
-                print($"{other.name} Exited from Slot {InventorySlotID}, Slot Empty");
+                // print($"{other.name} Exited from Slot {InventorySlotID}, Slot Empty");
                 
             }
             
@@ -101,12 +102,12 @@ public class InventorySlot : MonoBehaviour
         var item = args.interactableObject.transform.GetComponent<InventoryItem>();
         if (item == null) return;
         
-        print($"Released {item.name} into Slot {InventorySlotID}");
+        // print($"Released {item.name} into Slot {InventorySlotID}");
 
         PlaceItemInSlot(item);
         item.grabInteractableReference.selectExited.RemoveListener(OnItemReleased);
         
-        print($"Removed Listener from {item.name} into Slot {InventorySlotID}");
+        // print($"Removed Listener from {item.name} into Slot {InventorySlotID}");
     }
 
     private void PlaceItemInSlot(InventoryItem item)
@@ -138,10 +139,26 @@ public class InventorySlot : MonoBehaviour
         item.transform.DORotateQuaternion(transform.rotation, 0.3f).SetEase(Ease.OutSine)
             .OnComplete(() => {
                 itemsBeingPlaced.Remove(item);
-                print($"Item {item.name} placement complete in Slot {InventorySlotID}");
+                // print($"Item {item.name} placement complete in Slot {InventorySlotID}");
                 InventoryUIBridge.instance.SetHoverState(InventorySlotID, false);
             });
         
-        print($"Pushed {item.name} into Slot {InventorySlotID}");
+        // print($"Pushed {item.name} into Slot {InventorySlotID}");
+    }
+
+    public void Pack()
+    {
+        foreach (var slotItem in slotItems)
+        {
+            slotItem.transform.SetParent(this.transform);
+        }
+    }
+
+    public void UnPack(Transform parent)
+    {
+        foreach (var slotItem in slotItems)
+        {
+            slotItem.transform.SetParent(parent);
+        }
     }
 }

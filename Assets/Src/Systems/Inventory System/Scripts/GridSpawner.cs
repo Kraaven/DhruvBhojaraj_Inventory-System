@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridSpawner : MonoBehaviour
 {
     [Header("Object to Spawn")]
     public InventorySlot prefab;
+    public List<InventorySlot> inventorySlots = new List<InventorySlot>();
 
     [Header("Grid Settings")]
     public Vector2Int xRange = new Vector2Int(-2, 2);
@@ -30,6 +32,7 @@ public class GridSpawner : MonoBehaviour
             {
                 Vector3 localPosition = new Vector3(x, y, 0);
                 InventorySlot obj = Instantiate(prefab, transform);
+                inventorySlots.Add(obj);
                 obj.transform.localPosition = localPosition;
                 obj.InventorySlotID = SlotID;
                 SlotID++;
