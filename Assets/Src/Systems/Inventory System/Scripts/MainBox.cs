@@ -9,12 +9,10 @@ public class InventoryMainBox : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private InputActionReference ToggleInventoryAction;
-    [SerializeField] private Transform interactiveElementContainer;
 
     private InventorySlot inventorySlotSample;
     private GridSpawner gridSpawner;
-    private Camera mainCamera;
-    private Transform xrOrigin;
+    private Transform mainCamera;
 
     private bool inventoryIsOpen;
     private readonly Vector3 hiddenPosition = new Vector3(0, -100f, 0); // under player instead of far away
@@ -34,8 +32,7 @@ public class InventoryMainBox : MonoBehaviour
 
     private void Start()
     {
-        mainCamera = Camera.main;
-        xrOrigin = FindAnyObjectByType<XROrigin>()?.transform;
+        mainCamera = Camera.main.transform;
     }
 
     private void ToggleInventorySystem(InputAction.CallbackContext context)
@@ -50,9 +47,9 @@ public class InventoryMainBox : MonoBehaviour
 
     private void OpenInventory()
     {
-        if (xrOrigin == null || mainCamera == null) return;
+        if (mainCamera == null) return;
         
-        Vector3 position = xrOrigin.position + xrOrigin.forward * 1.0f;
+        Vector3 position = mainCamera.position + mainCamera.forward * 1.0f;
         position.y = mainCamera.transform.position.y;
         transform.position = position;
 
@@ -68,7 +65,7 @@ public class InventoryMainBox : MonoBehaviour
         openSequence.Append(transform.DORotate(new Vector3(0, 180, 0), 1.25f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine))
                     .Join(transform.DOScale(Vector3.one * 20, 1.25f).SetEase(Ease.OutSine))
                     .Join(transform.DOMoveY(transform.position.y + 0.25f, 1.25f).SetEase(Ease.OutBack))
-                    .OnComplete(() => gridSpawner.inventorySlots.ForEach(slot => slot.UnPack(interactiveElementContainer)));
+                    .OnComplete(() => gridSpawner.inventorySlots.ForEach(slot => slot.UnPack(GameManager.instance.Interactables)));
     }
 
     private void CloseInventory()
