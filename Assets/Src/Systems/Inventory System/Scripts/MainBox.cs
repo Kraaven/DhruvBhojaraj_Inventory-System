@@ -10,7 +10,7 @@ public class InventoryMainBox : MonoBehaviour
     [Header("References")]
     [SerializeField] private InputActionReference ToggleInventoryAction;
 
-    private InventorySlot inventorySlotSample;
+    private static InventorySlot inventorySlotSample;
     private GridSpawner gridSpawner;
     private Transform mainCamera;
 
@@ -95,7 +95,13 @@ public class InventoryMainBox : MonoBehaviour
             item.ResetScale();
     }
 
-    private float GetFitScaleFactor(Vector3 itemSize, Vector3 slotSize)
+    public static float GetAutoFitScaleFactor(Vector3 size)
+    {
+        return GetFitScaleFactor(size, inventorySlotSample.slotCollider.bounds.size );
+    }
+    
+
+    public static float GetFitScaleFactor(Vector3 itemSize, Vector3 slotSize)
     {
         float scaleFactor = Mathf.Min(slotSize.x / itemSize.x, slotSize.y / itemSize.y, slotSize.z / itemSize.z);
         return scaleFactor;
