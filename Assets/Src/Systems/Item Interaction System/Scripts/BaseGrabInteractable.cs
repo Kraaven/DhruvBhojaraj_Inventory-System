@@ -14,7 +14,7 @@ public class BaseGrabInteractable : XRGrabInteractable
     {
         base.Awake();
         outline = GetComponent<Outline>();
-        outline.OutlineWidth = 2f;
+        outline.OutlineWidth = 3f;
         outline.OutlineColor = Color.bisque;
         outline.enabled = false;
 
