@@ -1,26 +1,25 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Transformers;
 
 [RequireComponent(typeof(Outline))]
 public class BaseGrabInteractable : XRGrabInteractable
 {
-    private Outline outline;
-    private Rigidbody rigidbody;
+    private Outline outlineReference;
+    private Rigidbody rigidbodyReference;
     protected override void Awake()
     {
         base.Awake();
-        outline = GetComponent<Outline>();
-        outline.OutlineWidth = 3f;
-        outline.OutlineColor = Color.bisque;
-        outline.enabled = false;
+        outlineReference = GetComponent<Outline>();
+        outlineReference.OutlineWidth = 3f;
+        outlineReference.OutlineColor = Color.bisque;
+        outlineReference.enabled = false;
 
         this.trackScale = false;
         this.gameObject.tag = "Interactable";
-        rigidbody = this.GetComponent<Rigidbody>();
+        rigidbodyReference = this.GetComponent<Rigidbody>();
 
         useDynamicAttach = true;
     }
@@ -28,17 +27,17 @@ public class BaseGrabInteractable : XRGrabInteractable
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
         base.OnHoverEntered(args);
-        outline.enabled = true;
+        outlineReference.enabled = true;
     }
     protected override void OnHoverExited(HoverExitEventArgs args)
     {
         base.OnHoverExited(args);
-        outline.enabled = false;
+        outlineReference.enabled = false;
     }
 
     protected override void OnSelectExiting(SelectExitEventArgs args)
     {
         base.OnSelectExiting(args);
-        rigidbody.isKinematic = false;
+        rigidbodyReference.isKinematic = false;
     }
 }
